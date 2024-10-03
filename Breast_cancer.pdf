@@ -1,0 +1,66 @@
+import pandas as pd
+import numpy as np
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+breast_cancer = load_breast_cancer()
+df = pd.DataFrame(data=breast_cancer.data,  
+                  columns=breast_cancer.feature_names) 
+df
+df.shape
+df.head()
+df["Diagnosis"]=breast_cancer.target
+df.tail()
+df.info()
+df.describe()
+df["Diagnosis"].value_counts()
+x=df.drop(columns="Diagnosis",axis=1)
+y=df["Diagnosis"]
+x
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+x_train = scaler.fit_transform(x)
+x_test = scaler.transform(x)
+# spliting the data into test data and train data
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=2)
+model=LogisticRegression()
+model.fit(x_train,y_train)
+from sklearn.metrics import confusion_matrix,accuracy_score
+x_data_prediction=model.predict(x_train)
+accuracy_of_train_data=accuracy_score(y_train,x_data_prediction)
+accuracy_of_train_data
+confusion_metrix_eval=confusion_matrix(y_train,x_data_prediction)
+confusion_metrix_eval
+# accuracy on test data
+x_test_prediction=model.predict(x_test)
+accuracy_of_test_data=accuracy_score(y_test,x_test_prediction)
+accuracy_of_test_data
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=4)
+dtc=DecisionTreeClassifier(criterion="gini",max_depth=3,random_state=99)
+dtc.fit(x_train,y_train)
+DecisionTreeClassifier(max_depth=3, random_state=99)
+y_pred_gini=dtc.predict(x_test)
+y_pred_gini
+accuracy_score=accuracy_score(y_pred_gini,y_test)
+accuracy_score
+from sklearn.svm import SVC
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=4)
+model = SVC()
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+accuracy_svm=accuracy_score(y_test,y_pred)
+print("accuracy score of svm is",accuracy_svm)
+from sklearn.ensemble import RandomForestClassifier
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+y_pred
+from sklearn.neighbors import KNeighborsClassifier
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=20)
+KNN = KNeighborsClassifier(n_neighbors=10)
+KNN.fit(x_train, y_train)
+accuracy_knn=accuracy_score(y_test,y_pred)
+print("accuracy score of K-nearest Neighbour  is",accuracy_knn)
+accuracy_knn
